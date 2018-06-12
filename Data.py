@@ -3,8 +3,10 @@ import os
 import sqlite3
 import random
 from tkinter import *
+#from tkinter import messagebox
+
 import tkinter as tk
-import tkinter.messagebox as msg
+
 
 class student:
 	def __init__(self,SID = 0,Name="",Age=0,Debt=0):
@@ -40,7 +42,7 @@ class Data(tk.Tk):
 		self.config(menu=menu)
 		menu.add_cascade(label = "File",menu = filemenu)
 		filemenu.add_command(label="New",command = self.newFile)
-		#filemenu.add_command(label = "New")
+
 
 		self.colour_schemes = [{"bg": "lightgrey", "fg": "black"}, {"bg": "grey", "fg": "white"}]
 
@@ -64,6 +66,7 @@ class Data(tk.Tk):
 		self.add_input.pack(anchor = 'w',padx = 2,pady =2)
 		self.add_label.pack(anchor = 'w',padx = 2,pady =2)
 		self.button_add.pack(anchor='e',padx = 2,pady =2)
+		
 
 		self.button_print.pack(side = BOTTOM,padx = 5,pady =5,anchor='w')
 		self.add_input.focus()
@@ -95,7 +98,9 @@ class Data(tk.Tk):
 			return True
 		else: 
 			#if not deletey:
+			
 			notFind = "Student Was Not Found"
+			self.error_find()
 			#self.popup(notFind)
 			
 			self.search_label.configure(text = notFind)
@@ -107,10 +112,12 @@ class Data(tk.Tk):
 		command = "SELECT * FROM students"
 		Data.runQuery(command)
 
-
+	def error_find(self):
+		tk.messagebox.showinfo("ERROR","Student Was Not Found")
 	def insert_student(self,stu):
 
-		check = self.find_student(stu.SID)
+		#check = self.find_student(stu.SID)
+		check = True
 		if not check:
 			#print("Adding Student ",stu.SID,", ",stu.Name)
 			#stu=student(add_field.split())
@@ -155,12 +162,9 @@ class Data(tk.Tk):
 			s = student(sp[0],sp[1],sp[2],sp[3])
 			print(s)
 			self.add_label.configure(text ="Added " +str(sp))
-		#s = student(sid,name,age,debt)
+
 		self.insert_student(s)
 
-	# def popup(self,event = None,message = " "):
-	# 	pop = tk.Frame(self)
-	# 	self.labe_msg = Label(self,text = message).pack()
 
 	def newFile(self,event=None):
 		print("Pressed")
