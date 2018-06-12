@@ -52,7 +52,7 @@ class Data(tk.Tk):
 		self.delete_label = tk.Label(self,text = "Delete Student") 
 		self.button_delete = tk.Button(self,text = "Delete",command = self.remove_student)
 		self.add_input = tk.Entry(self)
-		self.add_label = tk.Label(self,text = "Add Student")
+		self.add_label = tk.Label(self,text = "Add student example: 123456 John 33 10000")
 		self.button_add = tk.Button(self,text = "Add Student",command=self.input_student)
 		
 		self.search_input.pack(anchor = 'w',padx = 2,pady =2)
