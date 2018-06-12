@@ -1,1 +1,7 @@
-Initial
+This is a simple demonstration of a SQL database with a GUI. 
+It was implemented using Python3.
+
+The table consists of a student ID, name, age, and debt.
+
+Filenames can be downloaded at:
+http://www2.census.gov/topics/genealogy/1990surnames/dist.all.last
