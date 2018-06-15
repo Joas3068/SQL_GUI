@@ -3,8 +3,7 @@ import os
 import sqlite3
 import random
 from tkinter import *
-#from tkinter import messagebox
-
+import itertools
 import tkinter as tk
 
 
@@ -31,17 +30,18 @@ class Data(tk.Tk):
 
 
 		#self.tasks_canvas = tk.Canvas(self)
-
+		self.wm_iconbitmap("@/usr/include/X11/bitmaps/tie_fighter")
+		
 		self.tasks_frame = tk.Frame(self)
 		self.title("Student Database")
 		self.geometry("400x400")
 
 		menu = Menu(self)
-		filemenu = Menu(menu)
+		filemenu = Menu(menu,tearoff = 0)
 
 		self.config(menu=menu)
-		menu.add_cascade(label = "File",menu = filemenu)
-		filemenu.add_command(label="New",command = self.newFile)
+		menu.add_cascade(label = "Info",menu = filemenu)
+		filemenu.add_command(label="Help",command = self.help)
 
 
 		self.colour_schemes = [{"bg": "lightgrey", "fg": "black"}, {"bg": "grey", "fg": "white"}]
@@ -56,6 +56,7 @@ class Data(tk.Tk):
 		self.add_input = tk.Entry(self)
 		self.add_label = tk.Label(self,text = "Add student example: 123456 John 33 10000")
 		self.button_add = tk.Button(self,text = "Add Student",command=self.input_student)
+		self.button_bulk = tk.Button(self,text = "Bulk Add",command = self.add_stuff)
 		
 		self.search_input.pack(anchor = 'w',padx = 2,pady =2)
 		self.search_label.pack(anchor = 'w',padx = 2,pady =2)
@@ -66,12 +67,12 @@ class Data(tk.Tk):
 		self.add_input.pack(anchor = 'w',padx = 2,pady =2)
 		self.add_label.pack(anchor = 'w',padx = 2,pady =2)
 		self.button_add.pack(anchor='e',padx = 2,pady =2)
-		
+		self.button_bulk.pack(side = BOTTOM,anchor='e',padx = 5,pady =5)
 
-		self.button_print.pack(side = BOTTOM,padx = 5,pady =5,anchor='w')
+		self.button_print.pack(side = BOTTOM,anchor='w',padx = 5,pady =5)
 		self.add_input.focus()
 		
-		self.bind("<Return>", self.input_student)
+		#self.bind("<Return>", self.input_student)
 		
 	def find_student(self,event=None):	
 		SID_find = self.search_input.get()
@@ -82,7 +83,7 @@ class Data(tk.Tk):
 		curs.execute(sql,[(SID_find)])
 
 		row = curs.fetchone()
-
+		
 
 		while row:
 			flag = True
@@ -100,7 +101,7 @@ class Data(tk.Tk):
 			#if not deletey:
 			
 			notFind = "Student Was Not Found"
-			self.error_find()
+			#self.error_find()
 			#self.popup(notFind)
 			
 			self.search_label.configure(text = notFind)
@@ -116,8 +117,8 @@ class Data(tk.Tk):
 		tk.messagebox.showinfo("ERROR","Student Was Not Found")
 	def insert_student(self,stu):
 
-		#check = self.find_student(stu.SID)
-		check = True
+		check = self.find_student(stu.SID)
+		
 		if not check:
 			#print("Adding Student ",stu.SID,", ",stu.Name)
 			#stu=student(add_field.split())
@@ -126,15 +127,14 @@ class Data(tk.Tk):
 			Data.runQuery(default_student,default_add)
 		else:
 			print(stu.SID," Already In Database")
-		
+			
 	def remove_student(self,event=None):
 
 		SID_Del = self.delete_input.get()
-		print(SID_Del)
-		check = self.find_student(SID_Del)
+		#check = self.find_student(SID_Del)
 		conn = sqlite3.connect('example.db')
 		curs = conn.cursor()
-		print(check)
+		#print(check)
 		#if check:
 		print("Deleting Student: ",SID_Del)
 		dell = "Deleting Student: " + str(SID_Del)
@@ -166,8 +166,12 @@ class Data(tk.Tk):
 		self.insert_student(s)
 
 
-	def newFile(self,event=None):
+	def help(self,event=None):
+		tk.messagebox.showinfo("Info Herer","Search for students \nPrint all to find or look for students")
 		print("Pressed")
+
+
+
 	@staticmethod
 	def runQuery(sql, data=None, receive=False):
 		conn = sqlite3.connect("example.db")
@@ -182,6 +186,7 @@ class Data(tk.Tk):
 			for row in rows:
 				print("SID is:",row[0],", Name:",row[1]
 				,", Age:",row[2], ", Debt:",row[3])
+			print("=========================================")
 
 		if receive:
 
@@ -203,24 +208,40 @@ class Data(tk.Tk):
 
 	def add_stuff(self):
 
-		f = open('name.txt')
+		a = file_len("name.txt")
 
-		c = 0
-		names = []
-		while c != 88798:
+		b = read_count("store.txt")
 
-			entry = f.readline()
+		print(a,b)
+		count = b
+		num = 1
+		try:
+			names = []
+			with open("name.txt") as f:
+				for line in itertools.islice(f,b,a,None):
+					#print(count,":",line)
+					entry = line
+					l = entry.split(" ")
+					add_entry = student(random.randint(100000,999999),l[0],random.randint(00,99),random.randint(0000000,9999999))
+					names.append(add_entry)
+					#print(add_entry.SID,add_entry.Name)
+					self.insert_student(add_entry)
 
-			line = entry.split(" ")
-			add_entry = student(random.randint(100000,999999),line[0],random.randint(00,99),random.randint(0000000,9999999))
-			names.append(add_entry)
-		
-			c += 1
+					if count > num:
+						print("Marker is at",count , "out of" ,a)
+						num = count*1.05
 
-		for entry in names:
-			#print(entry)
-			self.insert_student(entry)
-		f.close()
+					count +=1
+
+		except KeyboardInterrupt:
+			write_count("store.txt",count)
+
+			print("Interrupts at",count)
+
+			return
+		write_count("store.txt",count)
+		print("Finnish")
+	
 
 def parse_input(st = ""):
 
@@ -242,3 +263,33 @@ def parse_input(st = ""):
 		return False
 
 	return True
+
+
+def read_count(f_name = " "):
+
+	
+	try:
+		f = open(f_name,"r+")
+		a = f.read()
+	except:
+		f = open(f_name,"w")
+		f.write('0')
+		f.close()
+		f = open(f_name,"r")
+		a = f.read()
+
+	f.close()
+	return int(a)
+
+def write_count(f_name ,count):
+	with open(f_name, "w") as f:
+		f.write('%d' % count)
+
+
+def file_len(f_name):
+	with open(f_name) as f:
+		for i, l in enumerate(f):
+			pass
+
+		return i+1
+
