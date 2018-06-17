@@ -31,7 +31,7 @@ class Data(tk.Tk):
 
 		#self.tasks_canvas = tk.Canvas(self)
 		try:
-			self.wm_iconbitmap("@/usr/include/X11/bitmaps/tie_fighter22")
+			self.wm_iconbitmap("@/usr/include/X11/bitmaps/tie_fighter")
 		except:
 			pass
 		
