@@ -30,7 +30,10 @@ class Data(tk.Tk):
 
 
 		#self.tasks_canvas = tk.Canvas(self)
-		self.wm_iconbitmap("@/usr/include/X11/bitmaps/tie_fighter")
+		try:
+			self.wm_iconbitmap("@/usr/include/X11/bitmaps/tie_fighter22")
+		except:
+			pass
 		
 		self.tasks_frame = tk.Frame(self)
 		self.title("Student Database")
@@ -212,7 +215,7 @@ class Data(tk.Tk):
 		a = file_len("name.txt")
 
 		b = read_count("store.txt")
-
+		print("Press ctrl+c to stop")
 		print(a,b)
 		count = b
 		num = 1
