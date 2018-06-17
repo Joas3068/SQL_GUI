@@ -75,6 +75,7 @@ class Data(tk.Tk):
 		#self.bind("<Return>", self.input_student)
 		
 	def find_student(self,event=None):	
+		'''Search for entry by ID. Returns true if student is found'''
 		SID_find = self.search_input.get()
 		conn = sqlite3.connect('example.db')
 		curs = conn.cursor()
@@ -114,9 +115,9 @@ class Data(tk.Tk):
 		Data.runQuery(command)
 
 	def error_find(self):
-		tk.messagebox.showinfo("ERROR","Student Was Not Found")
+		tk.messagebox.showinfo("ERROR","Student Was Not Found")  ##print error popup
 	def insert_student(self,stu):
-
+		'''Inserts student if they are not in the database'''
 		check = self.find_student(stu.SID)
 		
 		if not check:
@@ -129,7 +130,7 @@ class Data(tk.Tk):
 			print(stu.SID," Already In Database")
 			
 	def remove_student(self,event=None):
-
+		''' Removes student based on ID, currently doesn't return accurate search results if ID is not in  '''
 		SID_Del = self.delete_input.get()
 		#check = self.find_student(SID_Del)
 		conn = sqlite3.connect('example.db')
